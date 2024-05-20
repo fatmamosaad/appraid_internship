@@ -39,7 +39,6 @@ def read_file(file_path):
     
 def write_file(file_path, data):
     try:
-        # Determine the file type based on its extension
         file_extension = file_path.split('.')[-1].lower()
 
         if file_extension == 'txt':
