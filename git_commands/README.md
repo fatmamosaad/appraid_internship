@@ -31,5 +31,8 @@ Here are some essential Git commands:
 13. git config --global user.name `your_branch_name`: set a name that is identifiable for credit when review version history.
 
 14. git config --global user.email `[valid-email]`:set an email address that will be associated with each history marker.
+15. git-cherry-pick :Apply the changes introduced by some existing commits
+16. git-revert :Revert some existing commits(Undo commits in a public branch)
+17. git squash (git rebase -i HEAD~N):to combine multiple commits into one. You can do this at any point in time (by using Git's "Interactive Rebase" feature), though it is most often done when merging branches.N:number for commits 
 
 
