@@ -21,42 +21,36 @@ def get_file_path():
     print(f"File selected: {file_path}")
     return file_path
 
+def make_dictionary(sw_base_type):
+    attributes = {filter_tag(child.tag): child.text for child in sw_base_type if child.text.strip()}
+    if len(attributes) >= 5:
+        short_name = attributes.get('SHORT-NAME', None)
+        base_type_size = attributes.get('BASE-TYPE-SIZE', None)
+        if short_name is not None and base_type_size is not None:
+            return {short_name: base_type_size}
+    return None
 def extract_sw_base_type_data(arxml_file_path):
     try:
         tree = ET.parse(arxml_file_path)
         root = tree.getroot()
-
-        # Assuming the namespace is defined as 'ns'
-        ns = {'ns': 'http://autosar.org/schema/r4.0'}
-
+ 
+        # Assuming the namespace is defined as 'name_space'
+        name_space = {'ns': 'http://autosar.org/schema/r4.0'}
+ 
         # Find all SW-BASE-TYPE elements
-        sw_base_types = root.findall('.//ns:SW-BASE-TYPE', namespaces=ns)
-
+        sw_base_types = root.findall('.//ns:SW-BASE-TYPE', namespaces=name_space)
+ 
         # Extract the data you need (e.g., attribute values)
-        listOfDicts = []
-        
+        list_of_dictionarys = []
+       
         for sw_base_type in sw_base_types:
-            attributes = {}
-            for child in sw_base_type:
-                attributes[filter_tag(child.tag)] = child.text
-                if(child.text.strip()):
-                    if len(attributes) >= 5:
-                        listOfDicts.append(dict(shortName = attributes.get('SHORT-NAME', None),
-                                                category = attributes.get('CATEGORY', None),
-                                                baseTypeSize = attributes.get('BASE-TYPE-SIZE', None),
-                                                baseTypeEncoding = attributes.get('BASE-TYPE-ENCODING', None),
-                                                nativeDeclaration = attributes.get('NATIVE-DECLARATION', None)))
-        return listOfDicts
-            
+            dict_result = make_dictionary(sw_base_type)
+            if dict_result is not None:
+                list_of_dictionarys.append(dict_result)
+               
+        return list_of_dictionarys
+           
     except Exception as e:
         print(f"Error parsing ARXML file: {e}")
         return None
-
-# Example usage
-arxml_file_path = get_file_path()  # Get the file path from the user
-
-
-extracted_data = extract_sw_base_type_data(arxml_file_path)
-output_file=r'C:\Users\ext.fatma.mosaad\Desktop\Fatma\read_xml\output.txt'
-write_file(output_file, extracted_data) # type: ignore
 
